@@ -1,0 +1,17 @@
+.detail-bap{
+    background-color: #f9f9f9;
+}
+
+.profil{
+    background-color: #2E4B68;
+    border: none;
+}
+
+.profil .card-body{
+    width: 98%;
+    background-color: #ffffff;
+}
+
+.preloader{
+    background-color: #343a40;
+}
