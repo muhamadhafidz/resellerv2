@@ -94,7 +94,7 @@
           </li>
 
           <li class="nav-item">
-            <a href="{{ route('admin.point.index') }}" class="nav-link {{ Request::is('admin/point*') ? 'active' : '' }}">
+            <a href="{{ route('admin.point.index') }}" class="nav-link {{ Request::is('admin/point') ? 'active' : '' }}">
               <i class="fas fa-clipboard-check nav-icon"></i>
               <p>Point</p>
             </a>

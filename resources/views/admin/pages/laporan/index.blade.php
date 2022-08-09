@@ -2,6 +2,7 @@
 
 @section('content')
 {{-- {{  }} --}}
+    
 <div class="container-fluid">
   <div class="row">
       <div class="col-md-12">
@@ -10,60 +11,83 @@
                   <div class="row ">
                       <div class="col ">
                           
-                        <h2 class="card-title font-weight-bold ">Riwayat Point Reseller</span></h2>
+                        <h2 class="card-title font-weight-bold ">Laporan Pembelian {{ request()->has('start') ? Carbon\Carbon::parse(request()->get('start'))->isoFormat('DD MMM YYYY') : $data->last()->created_at->isoFormat('DD MMM YYYY') }} hingga {{ request()->has('finish') ? Carbon\Carbon::parse(request()->get('finish'))->isoFormat('DD MMM YYYY') : $data->first()->created_at->isoFormat('DD MMM YYYY') }}</span></h2>
+
+                        
                       </div>
+                  </div>
+                  <hr>
+                  <div class="row">
+                    <div class="col-6">
+                        <form action="">
+                            <div class="form-row align-items-end">
+                                <div class="col">
+                                  <label for="tanggal-mulai">Tanggal Mulai</label>
+                                  <input class="form-control form-control-sm" type="date" name="start" value="{{ request()->has('start') ? request()->get('start') : '' }}">
+                                </div>
+                                <div class="col">
+                                    <label for="tanggal-mulai">Tanggal Selesai</label>
+                                    <input class="form-control form-control-sm" type="date" name="finish" value="{{ request()->has('finish') ? request()->get('finish') : '' }}">
+                                </div>
+                                <div class="col">
+                                    <button class="btn btn-secondary btn-sm d-inline">Lihat laporan</button>
+                                    @if (request()->has('start') || request()->has('finish'))
+                                    <a class="btn btn-outline-danger btn-sm d-inline" href="{{ route('admin.laporan.index') }}">reset</a>
+                                    @endif
+                                </div>
+                            </div>
+                        </form>
+                    </div>
                   </div>
               </div>
               <div class="card-body">
                   <table class="table table-striped display nowrap"  id="crudTable" style="width: 100%">
-                    <thead>
-                        <tr>
-                          <th scope="col">No</th>
-                          <th scope="col">Tanggal</th>
-                          <th scope="col">Invoice</th>
-                          <th scope="col">Reseller</th>
-                          <th scope="col">Point</th>
-                          <th scope="col">Total Point</th>
-                          <th scope="col">Status</th>
-                        </tr>
+                      <thead>
+                          <tr>
+                            <th>No</th>
+                            <th>Tanggal</th>
+                            <th>Invoice</th>
+                            <th>Reseller</th>
+                            <th>Produk</th>
+                            <th>Qty</th>
+                            <th>Harga Satuan</th>
+                            <th>Ongkir</th>
+                            <th>Subtotal</th>
+                            <th>Point</th>
+                          </tr>
+                          
                       </thead>
                       <tbody>
-                        @forelse ($points as $point)  
-                        <tr>
+                          @foreach ($data as $item)
+                          <tr>
                             <td>{{ $loop->iteration }}</td>
-                          <th scope="row">{{ $point->created_at->isoFormat('DD MMM YYYY') }}</th>
-                          <td>
-                              {{ $point->invoice }}
-                          </td>
-                          <td>
-                              {{ $point->user->nama }}
-                          </td>
-                          <td>
-                            @if ($point->keterangan == "masuk")
-                            <span class="text-success">+{{ $point->point }}</span>
-                            @else
-                            <span class="text-danger">-{{ $point->point }}</span>
-                            @endif
-                          </td>
-                          <td><b>{{ $point->total_point }}</b></td>
-                          <td>
-                            @if (strtolower($point->status) == "sukses" )
-                            <span class="badge bg-success text-light">{{ $point->status }}</span>
-                            @else
-                            <span class="badge bg-danger text-light">{{ $point->status }}</span>
-                            @endif
-                          </td>
+                            <td>{{ $item->created_at->isoFormat('DD MMM YYYY') }}</td>
+                            <td> <a href="{{ route('admin.pesanan.cetakInvoice', $item->id) }}" class="text-dark"><u class="font-weight-bold">{{ $item->invoice }}</u></a></td>
+                            <td>{{ $item->user->nama }}</a>
+                            </td>
+                                    
+                            <td>
+                                @foreach ($item->transaction_products as $produk)
+                                {{ $produk->nama_barang }}<br>
+                                @endforeach
+                            </td>
+                            <td>
+                                @foreach ($item->transaction_products as $produk)
+                                {{ $produk->qty }} <br>
+                                @endforeach
+                            </td>
+                            <td>
+                                @foreach ($item->transaction_products as $produk)
+                                Rp. {{ $produk->harga }} <br>
+                                @endforeach
+                            </td>
+                            <td>Rp. {{ $item->ongkir }}</a>
+                            <td>Rp. {{ $item->ongkir + $item->total_harga }}</a>
+                            <td>{{ $item->total_point }}</a>
+                          </tr>
+                          @endforeach
                           
-                        </tr>
-                        @empty
-                        <tr>
-                          <td class="text-center" colspan="5">
-                            Tidak ada riwayat point
-                            <br>
-                            <a href="{{ route('user.produk') }}">beli produk</a>
-                          </td>
-                        </tr>
-                        @endforelse
+                          
                       </tbody>
                   </table>
               </div>

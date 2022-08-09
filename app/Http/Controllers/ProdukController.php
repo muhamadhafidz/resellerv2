@@ -15,9 +15,9 @@ class ProdukController extends Controller
     {
   
         if(isset($request->cari)){
-            $products = Product::with(['product_images', 'product_points'])->where('nama_barang', 'like','%'.$request->cari.'%')->paginate(2);
+            $products = Product::with(['product_images', 'product_points'])->where('nama_barang', 'like','%'.$request->cari.'%')->paginate(12);
         }else {
-            $products = Product::with(['product_images', 'product_points'])->paginate(2);
+            $products = Product::with(['product_images', 'product_points'])->paginate(12);
         }
         return view('user.pages.produk.index', [
             'products' => $products

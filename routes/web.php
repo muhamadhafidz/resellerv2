@@ -68,6 +68,8 @@ Route::middleware(['auth'])
                     'as' => 'admin'
                 ]);
 
+                Route::get('admin/laporan', 'Admin\LaporanController@index')->name('admin.laporan.index');
+
                 Route::get('admin/pesanan/cetakInvoice/{id}', 'Admin\PesananController@cetakInvoice')->name('admin.pesanan.cetakInvoice');
                 Route::put('admin/pesanan/batal/{id}', 'Admin\PesananController@batal')->name('admin.pesanan.batal');
                 Route::post('admin/pesanan/addongkir/{id}', 'Admin\PesananController@addongkir')->name('admin.pesanan.addongkir');
