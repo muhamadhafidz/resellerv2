@@ -11,7 +11,11 @@
                   <div class="row ">
                       <div class="col ">
                           
+                        @if (!$data->isEmpty())
                         <h2 class="card-title font-weight-bold ">Laporan Pembelian {{ request()->has('start') ? Carbon\Carbon::parse(request()->get('start'))->isoFormat('DD MMM YYYY') : $data->last()->created_at->isoFormat('DD MMM YYYY') }} hingga {{ request()->has('finish') ? Carbon\Carbon::parse(request()->get('finish'))->isoFormat('DD MMM YYYY') : $data->first()->created_at->isoFormat('DD MMM YYYY') }}</span></h2>
+                        @else
+                        <h2 class="card-title font-weight-bold ">Laporan Pembelian</h2>
+                        @endif
 
                         
                       </div>
